@@ -6,9 +6,9 @@ import AnimatedSection from "@/components/shared/AnimatedSection";
 import { siteConfig } from "@/data/site-config";
 
 const featured = [
+  { title: "学校航拍", category: "自然摄影", image: "/images/portfolio/nature/school-drone-01.jpg", href: "/portfolio/school-drone" },
   { title: "山间云雾", category: "自然摄影", image: "/images/portfolio/nature/mountain-mist-cover.jpg", href: "/portfolio/mountain-mist" },
   { title: "竹海低语", category: "自然摄影", image: "/images/portfolio/nature/bamboo-whisper-cover.jpg", href: "/portfolio/bamboo-whisper" },
-  { title: "霓虹雨夜", category: "街头摄影", image: "/images/portfolio/street/neon-rain-cover.jpg", href: "/portfolio/neon-rain" },
 ];
 
 export default function FeaturedWorks() {
