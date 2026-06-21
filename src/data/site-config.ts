@@ -1,10 +1,11 @@
 export const siteConfig = {
+  basePath: "/han-visuals",
   name: "Han Visuals",
   tagline: "用镜头收藏生活里的光",
   taglineEn: "Photography · Film · Visual Storytelling",
   description:
     "Han Visuals 是一个专注于摄影、视频创作与色彩美学的视觉工作室。记录光，收藏生活。",
-  url: "https://hanvisuals.com",
+  url: "https://a3059366817-creator.github.io/han-visuals",
   ogImage: "/og-image.jpg",
   socials: {
     instagram: "https://instagram.com/hanvisuals",

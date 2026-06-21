@@ -45,13 +45,13 @@ export default function HeroSection() {
             muted
             loop
             playsInline
-            poster="/video/hero-poster.jpg"
+            poster={`${siteConfig.basePath}/video/hero-poster.jpg`}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               videoLoaded ? "opacity-40" : "opacity-0"
             }`}
             style={{ transform: `scale(${scale})` }}
           >
-            <source src="/video/hero-reel.mp4" type="video/mp4" />
+            <source src={`${siteConfig.basePath}/video/hero-reel.mp4`} type="video/mp4" />
           </video>
         ) : (
           <div
