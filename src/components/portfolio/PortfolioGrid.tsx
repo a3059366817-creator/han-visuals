@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { PortfolioFrontmatter } from "@/lib/content";
+import { siteConfig } from "@/data/site-config";
 
 interface Props {
   entries: (PortfolioFrontmatter & { slug: string })[];
@@ -62,19 +63,18 @@ export default function PortfolioGrid({ entries }: Props) {
                 className="group block w-full"
               >
                 <div className="relative overflow-hidden bg-neutral-900 mb-3">
-                  <div
-                    className={`w-full flex items-center justify-center ${
+                  <img
+                    src={`${siteConfig.basePath}${entry.coverImage}`}
+                    alt={entry.title}
+                    loading="lazy"
+                    className={`w-full object-cover ${
                       entry.aspectRatio === "portrait"
                         ? "aspect-[3/4]"
                         : entry.aspectRatio === "landscape"
                         ? "aspect-[4/3]"
                         : "aspect-square"
                     }`}
-                  >
-                    <span className="text-xs font-light tracking-[0.2em] text-white/10 uppercase">
-                      {entry.title}
-                    </span>
-                  </div>
+                  />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                     <span className="text-xs font-light tracking-[0.2em] text-white/80 uppercase">
                       查看

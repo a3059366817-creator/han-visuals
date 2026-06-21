@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import AnimatedSection from "@/components/shared/AnimatedSection";
+import { siteConfig } from "@/data/site-config";
 
 const featured = [
+  { title: "山间云雾", category: "自然摄影", image: "/images/portfolio/nature/mountain-mist-cover.jpg", href: "/portfolio/mountain-mist" },
+  { title: "竹海低语", category: "自然摄影", image: "/images/portfolio/nature/bamboo-whisper-cover.jpg", href: "/portfolio/bamboo-whisper" },
   { title: "霓虹雨夜", category: "街头摄影", image: "/images/portfolio/street/neon-rain-cover.jpg", href: "/portfolio/neon-rain" },
-  { title: "北海道之静", category: "旅行摄影", image: "/images/portfolio/travel/hokkaido-silence-cover.jpg", href: "/portfolio/hokkaido-silence" },
-  { title: "舞者", category: "人像摄影", image: "/images/portfolio/portrait/dancer-study-cover.jpg", href: "/portfolio/dancer-study" },
 ];
 
 export default function FeaturedWorks() {
@@ -32,11 +33,12 @@ export default function FeaturedWorks() {
                 className="group block"
               >
                 <div className="relative overflow-hidden bg-neutral-900 aspect-[4/5] mb-4">
-                  <div className="absolute inset-0 bg-neutral-800 flex items-center justify-center">
-                    <span className="text-xs font-light tracking-[0.2em] text-white/15 uppercase">
-                      {item.title}
-                    </span>
-                  </div>
+                  <img
+                    src={`${siteConfig.basePath}${item.image}`}
+                    alt={item.title}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 <h3 className="text-sm font-light tracking-[0.12em] text-white/80 group-hover:text-white transition-colors duration-300">
