@@ -1,5 +1,8 @@
+// VERCEL env var is inlined by Next.js at build time
+const isVercel = process.env.VERCEL === "1";
+
 export const siteConfig = {
-  basePath: "/han-visuals",
+  basePath: isVercel ? "" : "/han-visuals",
   name: "Han Visuals",
   tagline: "用镜头收藏生活里的光",
   taglineEn: "Photography · Film · Visual Storytelling",
