@@ -39,34 +39,37 @@ export default function Picture({
 
   return (
     <div className={className} style={{ position: "relative", overflow: "hidden", ...style }}>
+      {/* Blur placeholder: absolutely positioned so it doesn't affect layout */}
       {blurSrc && !loaded && (
         <img
           src={blurSrc}
           alt=""
           aria-hidden="true"
-          className={imgClassName}
           style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%",
-            objectFit: "cover", filter: "blur(20px)", transform: "scale(1.1)",
-            transition: "opacity 0.4s",
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "blur(20px)",
+            transform: "scale(1.1)",
           }}
         />
       )}
       {webpSrc ? (
-        <picture>
+        <picture style={{ display: "block" }}>
           <source srcSet={`${bp}${webpSrc}`} type="image/webp" />
           <img
             src={fallbackSrc}
             alt={alt}
             loading={loading}
             {...(fetchPriority ? { fetchPriority } : {})}
-            onLoad={() => { setLoaded(true); onLoad?.(); }}
-            className={imgClassName}
-            style={{
-              opacity: loaded ? 1 : 0, transition: "opacity 0.4s",
-              ...(blurSrc ? { position: "absolute", inset: 0 } : {}),
-              width: "100%", height: "100%", objectFit: "cover",
+            onLoad={() => {
+              setLoaded(true);
+              onLoad?.();
             }}
+            className={imgClassName}
+            style={{ opacity: loaded ? 1 : blurSrc ? 0 : 1, transition: "opacity 0.4s" }}
           />
         </picture>
       ) : (
@@ -75,7 +78,10 @@ export default function Picture({
           alt={alt}
           loading={loading}
           {...(fetchPriority ? { fetchPriority } : {})}
-          onLoad={() => { setLoaded(true); onLoad?.(); }}
+          onLoad={() => {
+            setLoaded(true);
+            onLoad?.();
+          }}
           className={imgClassName}
         />
       )}
