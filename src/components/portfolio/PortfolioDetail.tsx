@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import type { PortfolioFrontmatter } from "@/lib/content";
-import { siteConfig } from "@/data/site-config";
+import Picture from "@/components/shared/Picture";
 
 interface Props {
   frontmatter: PortfolioFrontmatter;
@@ -56,10 +56,12 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <img
-            src={`${siteConfig.basePath}${frontmatter.coverImage}`}
+          <Picture
+            src={frontmatter.coverImage}
             alt={frontmatter.title}
-            className={`relative overflow-hidden bg-neutral-900 mb-12 object-cover mx-auto ${
+            loading="eager"
+            fetchPriority="high"
+            imgClassName={`bg-neutral-900 mb-12 object-cover mx-auto ${
               frontmatter.aspectRatio === "portrait"
                 ? "aspect-[3/4]"
                 : frontmatter.aspectRatio === "landscape"
@@ -133,11 +135,12 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                     onClick={() => openLightbox(i)}
                     className="relative overflow-hidden bg-neutral-900 aspect-square group cursor-pointer"
                   >
-                    <img
-                      src={`${siteConfig.basePath}${img}`}
+                    <Picture
+                      src={img}
                       alt={`${frontmatter.title} - ${i + 1}`}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      thumb
+                      className="absolute inset-0"
+                      imgClassName="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <span className="text-xs font-light tracking-[0.15em] text-white/70 uppercase">
@@ -218,10 +221,12 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                 className="max-w-[85vw] max-h-[80vh] bg-neutral-900 flex items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                <img
-                  src={`${siteConfig.basePath}${gallery[lightboxIndex]}`}
+                <Picture
+                  src={gallery[lightboxIndex]}
                   alt={`${frontmatter.title} - ${lightboxIndex + 1}`}
-                  className="max-w-full max-h-[80vh] object-contain"
+                  thumb={false}
+                  loading="eager"
+                  imgClassName="max-w-full max-h-[80vh] object-contain"
                 />
               </motion.div>
             </AnimatePresence>

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { siteConfig } from "@/data/site-config";
+
+const fadeUpClass = "animate-hero-fade-up";
 
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -45,6 +46,7 @@ export default function HeroSection() {
             muted
             loop
             playsInline
+            preload="metadata"
             poster={`${siteConfig.basePath}/video/hero-poster.jpg`}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               videoLoaded ? "opacity-40" : "opacity-0"
@@ -76,54 +78,30 @@ export default function HeroSection() {
         style={{ opacity, transform: `translateY(${translateY}px)` }}
       >
         {/* Category badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mb-10"
-        >
+        <div className={`mb-10 ${fadeUpClass}`} style={{ animationDelay: "0s" }}>
           <span className="inline-block px-4 py-1.5 border border-white/[0.08] text-[10px] font-light tracking-[0.35em] text-white/50 uppercase">
             摄影 &bull; 视频创作 &bull; 视觉故事
           </span>
-        </motion.div>
+        </div>
 
         {/* Main headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.1 }}
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin tracking-tighter text-white leading-[0.95]"
-        >
+        <h1 className={`text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin tracking-tighter text-white leading-[0.95] ${fadeUpClass}`} style={{ animationDelay: "0.1s" }}>
           {siteConfig.name}
-        </motion.h1>
+        </h1>
 
-        {/* Tagline — larger and more prominent */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.25 }}
-          className="mt-10 text-xl sm:text-2xl md:text-3xl font-light tracking-[0.06em] text-white/50 leading-relaxed"
-        >
+        {/* Tagline */}
+        <p className={`mt-10 text-xl sm:text-2xl md:text-3xl font-light tracking-[0.06em] text-white/50 leading-relaxed ${fadeUpClass}`} style={{ animationDelay: "0.25s" }}>
           {siteConfig.tagline}
-        </motion.p>
+        </p>
 
         {/* Sub-tagline */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.35 }}
-          className="mt-4 text-sm sm:text-base font-light tracking-[0.15em] text-white/25"
-        >
+        <p className={`mt-4 text-sm sm:text-base font-light tracking-[0.15em] text-white/25 ${fadeUpClass}`}
+          style={{ animationDelay: "0.35s", animationName: "heroFadeIn" }}>
           {siteConfig.taglineEn}
-        </motion.p>
+        </p>
 
         {/* CTA buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.5 }}
-          className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
+        <div className={`mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 ${fadeUpClass}`} style={{ animationDelay: "0.5s" }}>
           <Link
             href="/portfolio"
             className="inline-flex items-center gap-2 px-8 py-3 border border-white/[0.12] hover:border-white/[0.25] text-sm font-light tracking-[0.18em] text-white/80 hover:text-white transition-all duration-500 uppercase"
@@ -136,22 +114,19 @@ export default function HeroSection() {
           >
             观看影像
           </Link>
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.2 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
-        style={{ opacity: Math.max(0, opacity - 0.3) }}
+      <div
+        className={`absolute bottom-10 left-1/2 -translate-x-1/2 z-10 ${fadeUpClass}`}
+        style={{ animationDelay: "1.2s", animationName: "heroFadeIn", opacity: Math.max(0, opacity - 0.3) }}
       >
         <span className="block w-px h-16 bg-gradient-to-b from-white/20 to-transparent" />
         <span className="block mt-3 text-[9px] font-light tracking-[0.3em] text-white/20 uppercase text-center">
           向下滚动
         </span>
-      </motion.div>
+      </div>
     </section>
   );
 }
