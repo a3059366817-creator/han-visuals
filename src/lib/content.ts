@@ -23,6 +23,7 @@ export interface FilmFrontmatter {
   thumbnail: string;
   description: string;
   date: string;
+  videoSrc?: string;
 }
 
 export interface JournalFrontmatter {
