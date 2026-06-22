@@ -92,10 +92,11 @@ export default function FilmGrid({ entries }: Props) {
             {activeVideo.title}
           </span>
           <video
-            className="max-w-[92vw] max-h-[88vh] rounded-sm"
+            className="shrink-0 max-w-[92vw] max-h-[88vh] rounded-sm"
             src={activeVideo.src}
             controls
             autoPlay
+            playsInline
             onClick={(e) => e.stopPropagation()}
           />
         </div>
