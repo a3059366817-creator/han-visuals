@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ServiceWorkerRegister from "@/components/shared/ServiceWorkerRegister";
 import { siteConfig } from "@/data/site-config";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-neutral-950 text-white">
+        <ServiceWorkerRegister />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
