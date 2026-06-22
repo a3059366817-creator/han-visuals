@@ -7,8 +7,8 @@ import { siteConfig } from "@/data/site-config";
 
 const featured = [
   { title: "学校航拍", category: "自然摄影", image: "/images/portfolio/nature/school-drone-01.jpg", href: "/portfolio/school-drone" },
-  { title: "山间云雾", category: "自然摄影", image: "/images/portfolio/nature/mountain-mist-cover.jpg", href: "/portfolio/mountain-mist" },
-  { title: "竹海低语", category: "自然摄影", image: "/images/portfolio/nature/bamboo-whisper-cover.jpg", href: "/portfolio/bamboo-whisper" },
+  { title: "一品荷花", category: "自然摄影", image: "/images/portfolio/nature/一品荷花-04.jpg", href: "/portfolio/yi-pin-he-hua" },
+  { title: "贺院-航拍", category: "自然摄影", image: "/images/portfolio/nature/贺院-航拍-04.jpg", href: "/portfolio/he-yuan-hang-pai" },
 ];
 
 export default function FeaturedWorks() {
