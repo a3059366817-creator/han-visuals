@@ -90,7 +90,7 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                 </span>
               )}
               <span className="text-xs font-light text-white/25 uppercase tracking-[0.1em]">
-                {{street: "街头摄影", travel: "旅行摄影", nature: "自然摄影", portrait: "人像摄影", pet: "宠物摄影", cinematic: "电影感"}[frontmatter.category]}
+                {{street: "街头摄影", travel: "旅行摄影", nature: "自然摄影", portrait: "人像摄影", pet: "宠物摄影", cinematic: "电影感", cultural: "人文摄影"}[frontmatter.category]}
               </span>
             </div>
             <p className="text-base sm:text-lg font-light text-white/40 leading-relaxed mb-10">

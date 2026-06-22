@@ -11,7 +11,7 @@ export interface PortfolioFrontmatter {
   tags: string[];
   date: string;
   location: string;
-  category: "street" | "travel" | "nature" | "portrait" | "pet" | "cinematic";
+  category: "street" | "travel" | "nature" | "portrait" | "pet" | "cinematic" | "cultural";
   aspectRatio: "portrait" | "landscape" | "square";
   gallery: string[];
 }

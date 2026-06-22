@@ -18,6 +18,7 @@ const categories = [
   { id: "portrait", label: "人像" },
   { id: "pet", label: "宠物" },
   { id: "cinematic", label: "电影感" },
+  { id: "cultural", label: "人文" },
 ];
 
 export default function PortfolioGrid({ entries }: Props) {
@@ -86,7 +87,7 @@ export default function PortfolioGrid({ entries }: Props) {
                 </h3>
                 <div className="flex items-center gap-3 mt-1.5">
                   <span className="text-xs font-light text-white/25 uppercase tracking-[0.1em]">
-                    {{street: "街头", travel: "旅行", nature: "自然", portrait: "人像", pet: "宠物", cinematic: "电影感"}[entry.category]}
+                    {{street: "街头", travel: "旅行", nature: "自然", portrait: "人像", pet: "宠物", cinematic: "电影感", cultural: "人文"}[entry.category]}
                   </span>
                   {entry.location && (
                     <span className="text-xs font-light text-white/15">
