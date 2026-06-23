@@ -36,8 +36,14 @@ export default function FeaturedWorks() {
                   <img
                     src={`${siteConfig.basePath}${item.image}`}
                     alt={item.title}
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover bg-neutral-900"
+                    onError={(e) => {
+                      const el = e.currentTarget;
+                      el.style.opacity = "0.1";
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>

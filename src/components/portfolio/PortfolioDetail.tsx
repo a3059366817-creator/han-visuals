@@ -59,6 +59,7 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
           <img
             src={`${siteConfig.basePath}${frontmatter.coverImage}`}
             alt={frontmatter.title}
+            fetchPriority="high"
             className={`relative overflow-hidden bg-neutral-900 mb-12 object-cover mx-auto ${
               frontmatter.aspectRatio === "portrait"
                 ? "aspect-[3/4]"
@@ -66,6 +67,10 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                 ? "aspect-[4/3]"
                 : "aspect-square"
             } max-h-[70vh]`}
+            onError={(e) => {
+              const el = e.currentTarget;
+              el.style.opacity = "0.05";
+            }}
           />
         </motion.div>
 
@@ -137,7 +142,12 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                       src={`${siteConfig.basePath}${img}`}
                       alt={`${frontmatter.title} - ${i + 1}`}
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover bg-neutral-900"
+                      onError={(e) => {
+                        const el = e.currentTarget;
+                        el.style.opacity = "0.05";
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <span className="text-xs font-light tracking-[0.15em] text-white/70 uppercase">
@@ -222,6 +232,10 @@ export default function PortfolioDetail({ frontmatter, children }: Props) {
                   src={`${siteConfig.basePath}${gallery[lightboxIndex]}`}
                   alt={`${frontmatter.title} - ${lightboxIndex + 1}`}
                   className="max-w-full max-h-[80vh] object-contain"
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    el.style.display = "none";
+                  }}
                 />
               </motion.div>
             </AnimatePresence>

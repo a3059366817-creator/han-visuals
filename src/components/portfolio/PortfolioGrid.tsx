@@ -68,13 +68,18 @@ export default function PortfolioGrid({ entries }: Props) {
                     src={`${siteConfig.basePath}${entry.coverImage}`}
                     alt={entry.title}
                     loading="lazy"
-                    className={`w-full object-cover ${
+                    decoding="async"
+                    className={`w-full object-cover bg-neutral-900 ${
                       entry.aspectRatio === "portrait"
                         ? "aspect-[3/4]"
                         : entry.aspectRatio === "landscape"
                         ? "aspect-[4/3]"
                         : "aspect-square"
                     }`}
+                    onError={(e) => {
+                      const el = e.currentTarget;
+                      el.style.display = "none";
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                     <span className="text-xs font-light tracking-[0.2em] text-white/80 uppercase">

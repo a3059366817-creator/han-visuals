@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { siteConfig } from "@/data/site-config";
 
+const HERO_IMAGE = `${siteConfig.basePath}/images/portfolio/nature/school-drone-01.jpg`;
+
 export default function HeroSection() {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -20,14 +22,9 @@ export default function HeroSection() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const handleCanPlay = () => setVideoLoaded(true);
-    const handleError = () => setVideoError(true);
-    video.addEventListener("canplaythrough", handleCanPlay);
-    video.addEventListener("error", handleError);
-    return () => {
-      video.removeEventListener("canplaythrough", handleCanPlay);
-      video.removeEventListener("error", handleError);
-    };
+    const handleCanPlay = () => setVideoReady(true);
+    video.addEventListener("canplaythrough", handleCanPlay, { once: true });
+    return () => video.removeEventListener("canplaythrough", handleCanPlay);
   }, []);
 
   const opacity = Math.max(0, 1 - scrollY / 600);
@@ -36,32 +33,36 @@ export default function HeroSection() {
 
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
-      {/* Background */}
+      {/* Background image — loads instantly, no video dependency */}
       <div className="absolute inset-0 bg-neutral-950">
-        {!videoError ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={`${siteConfig.basePath}/video/hero-poster.jpg`}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              videoLoaded ? "opacity-40" : "opacity-0"
-            }`}
-            style={{ transform: `scale(${scale})` }}
-          >
-            <source src={`${siteConfig.basePath}/video/hero-reel.mp4`} type="video/mp4" />
-          </video>
-        ) : (
-          <div
-            className="absolute inset-0 bg-neutral-900 opacity-40"
-            style={{ transform: `scale(${scale})` }}
-          />
-        )}
+        <img
+          src={HERO_IMAGE}
+          alt=""
+          fetchPriority="high"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            imgLoaded ? "opacity-40" : "opacity-0"
+          }`}
+          style={{ transform: `scale(${scale})` }}
+        />
+        {/* Optional video overlay — only shown when it actually loads */}
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="none"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            videoReady ? "opacity-20" : "opacity-0"
+          }`}
+          style={{ transform: `scale(${scale})` }}
+        >
+          <source src={`${siteConfig.basePath}/video/hero-reel.mp4`} type="video/mp4" />
+        </video>
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/30 via-transparent to-neutral-950" />
-        {/* Noise texture overlay */}
+        {/* Noise texture */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
         }} />
@@ -75,7 +76,6 @@ export default function HeroSection() {
         className="relative z-10 max-w-5xl mx-auto px-6 text-center"
         style={{ opacity, transform: `translateY(${translateY}px)` }}
       >
-        {/* Category badge */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -87,7 +87,6 @@ export default function HeroSection() {
           </span>
         </motion.div>
 
-        {/* Main headline */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -97,7 +96,6 @@ export default function HeroSection() {
           {siteConfig.name}
         </motion.h1>
 
-        {/* Tagline — larger and more prominent */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,7 +105,6 @@ export default function HeroSection() {
           {siteConfig.tagline}
         </motion.p>
 
-        {/* Sub-tagline */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -117,7 +114,6 @@ export default function HeroSection() {
           {siteConfig.taglineEn}
         </motion.p>
 
-        {/* CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

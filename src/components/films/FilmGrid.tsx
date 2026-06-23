@@ -11,6 +11,20 @@ interface Props {
 
 export default function FilmGrid({ entries }: Props) {
   const [activeVideo, setActiveVideo] = useState<{ title: string; src: string } | null>(null);
+  const [videoLoading, setVideoLoading] = useState(true);
+  const [videoError, setVideoError] = useState(false);
+
+  const openVideo = (title: string, src: string) => {
+    setVideoLoading(true);
+    setVideoError(false);
+    setActiveVideo({ title, src });
+  };
+
+  const closeVideo = () => {
+    setActiveVideo(null);
+    setVideoLoading(true);
+    setVideoError(false);
+  };
 
   return (
     <>
@@ -25,7 +39,7 @@ export default function FilmGrid({ entries }: Props) {
             className="group cursor-pointer"
             onClick={() => {
               if (film.videoSrc) {
-                setActiveVideo({ title: film.title, src: `${siteConfig.basePath}${film.videoSrc}` });
+                openVideo(film.title, `${siteConfig.basePath}${film.videoSrc}`);
               }
             }}
           >
@@ -35,13 +49,18 @@ export default function FilmGrid({ entries }: Props) {
                   src={`${siteConfig.basePath}${film.thumbnail}`}
                   alt={film.title}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    el.style.display = "none";
+                  }}
                 />
-              ) : (
-                <span className="text-xs font-light tracking-[0.2em] text-white/10 uppercase">
-                  {film.title}
-                </span>
-              )}
+              ) : null}
+              {/* Text fallback shown when no thumbnail or thumbnail errors */}
+              <span className="text-xs font-light tracking-[0.2em] text-white/10 uppercase">
+                {film.title}
+              </span>
 
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                 <span className="w-14 h-14 rounded-full border border-white/30 flex items-center justify-center">
@@ -81,23 +100,60 @@ export default function FilmGrid({ entries }: Props) {
       {activeVideo && (
         <div
           className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center"
-          onClick={() => setActiveVideo(null)}
+          onClick={closeVideo}
         >
           <button
             className="absolute top-6 right-8 z-[201] text-white/60 hover:text-white text-3xl font-light"
-            onClick={() => setActiveVideo(null)}
+            onClick={closeVideo}
           >
             &times;
           </button>
           <span className="absolute top-6 left-8 z-[201] text-white/40 text-sm tracking-wider">
             {activeVideo.title}
           </span>
+
+          {/* Loading state */}
+          {videoLoading && !videoError && (
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-10 h-10 border-2 border-white/10 border-t-white/40 rounded-full animate-spin" />
+              <span className="text-xs font-light tracking-[0.15em] text-white/30 uppercase">
+                加载中...
+              </span>
+            </div>
+          )}
+
+          {/* Error state */}
+          {videoError && (
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-sm font-light text-white/40">视频加载失败，请稍后重试</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setVideoError(false);
+                  setVideoLoading(true);
+                  // Force re-render by changing key via state update
+                  setActiveVideo({ ...activeVideo });
+                }}
+                className="px-4 py-2 text-xs font-light tracking-[0.1em] text-white/50 border border-white/[0.12] hover:text-white/70 uppercase"
+              >
+                重试
+              </button>
+            </div>
+          )}
+
           <video
-            className="shrink-0 max-w-[92vw] max-h-[88vh] rounded-sm"
+            key={activeVideo.src}
+            className={`shrink-0 max-w-[92vw] max-h-[88vh] rounded-sm ${videoLoading ? "hidden" : ""}`}
             src={activeVideo.src}
             controls
             autoPlay
             playsInline
+            preload="none"
+            onCanPlay={() => setVideoLoading(false)}
+            onError={() => {
+              setVideoLoading(false);
+              setVideoError(true);
+            }}
             onClick={(e) => e.stopPropagation()}
           />
         </div>
