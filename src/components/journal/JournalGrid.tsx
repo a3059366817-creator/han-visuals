@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { JournalFrontmatter } from "@/lib/content";
 
@@ -8,17 +8,45 @@ interface Props {
   entries: (JournalFrontmatter & { slug: string })[];
 }
 
+function FadeInArticle({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setTimeout(() => setVisible(true), delay);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "-60px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+
+  return (
+    <article
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transition: "opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+      }}
+    >
+      {children}
+    </article>
+  );
+}
+
 export default function JournalGrid({ entries }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
       {entries.map((entry, i) => (
-        <motion.article
-          key={entry.slug}
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1], delay: i * 0.08 }}
-        >
+        <FadeInArticle key={entry.slug} delay={i * 80}>
           <Link href={`/journal/${entry.slug}`} className="group block">
             <div className="relative overflow-hidden bg-neutral-900 aspect-[16/10] mb-5 flex items-center justify-center">
               <span className="text-xs font-light tracking-[0.2em] text-white/10 uppercase">
@@ -44,7 +72,7 @@ export default function JournalGrid({ entries }: Props) {
               {entry.excerpt}
             </p>
           </Link>
-        </motion.article>
+        </FadeInArticle>
       ))}
     </div>
   );

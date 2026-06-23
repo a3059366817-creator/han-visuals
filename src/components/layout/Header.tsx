@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/shared/Logo";
 import { siteConfig } from "@/data/site-config";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -25,6 +25,19 @@ export default function Header() {
   useEffect(() => {
     document.body.style.overflow = isMobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
+  }, [isMobileOpen]);
+
+  const openMenu = useCallback(() => {
+    setMenuMounted(true);
+    requestAnimationFrame(() => setIsMobileOpen(true));
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setIsMobileOpen(false);
+  }, []);
+
+  const handleMenuTransitionEnd = useCallback(() => {
+    if (!isMobileOpen) setMenuMounted(false);
   }, [isMobileOpen]);
 
   return (
@@ -59,55 +72,57 @@ export default function Header() {
           </nav>
 
           <button
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            onClick={() => isMobileOpen ? closeMenu() : openMenu()}
             className="md:hidden flex flex-col gap-1.5 w-6 h-5 justify-center items-end z-50 relative"
             aria-label="Toggle menu"
           >
-            <motion.span
-              animate={isMobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              className="block h-px bg-white/80 w-6"
+            <span
+              className={`block h-px bg-white/80 transition-all duration-300 origin-center ${
+                isMobileOpen ? "w-6 rotate-45 translate-y-[5px]" : "w-6 rotate-0 translate-y-0"
+              }`}
             />
-            <motion.span
-              animate={isMobileOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="block h-px bg-white/80 w-4"
+            <span
+              className={`block h-px bg-white/80 transition-all duration-300 ${
+                isMobileOpen ? "w-4 opacity-0" : "w-4 opacity-100"
+              }`}
             />
-            <motion.span
-              animate={isMobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              className="block h-px bg-white/80 w-6"
+            <span
+              className={`block h-px bg-white/80 transition-all duration-300 origin-center ${
+                isMobileOpen ? "w-6 -rotate-45 -translate-y-[5px]" : "w-6 rotate-0 translate-y-0"
+              }`}
             />
           </button>
         </div>
       </header>
 
-      <AnimatePresence>
-        {isMobileOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-neutral-950 flex flex-col items-center justify-center gap-8 md:hidden"
-          >
-            {siteConfig.navLinks.map((link, i) => (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.05 }}
+      {menuMounted && (
+        <div
+          onTransitionEnd={handleMenuTransitionEnd}
+          className={`fixed inset-0 z-40 bg-neutral-950 flex flex-col items-center justify-center gap-8 md:hidden transition-opacity duration-300 ${
+            isMobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          {siteConfig.navLinks.map((link, i) => (
+            <div
+              key={link.href}
+              style={{
+                opacity: isMobileOpen ? 1 : 0,
+                transform: isMobileOpen ? "translateY(0)" : "translateY(20px)",
+                transition: `opacity 0.4s ease, transform 0.4s ease ${0.1 + i * 0.05}s`,
+              }}
+            >
+              <Link
+                href={link.href}
+                className={`text-2xl font-light tracking-[0.2em] uppercase ${
+                  pathname === link.href ? "text-white" : "text-white/40"
+                }`}
               >
-                <Link
-                  href={link.href}
-                  className={`text-2xl font-light tracking-[0.2em] uppercase ${
-                    pathname === link.href ? "text-white" : "text-white/40"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {link.label}
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
